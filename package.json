@@ -1,0 +1,13 @@
+{
+  "name": "psol-interest-rate",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "",
+  "dependencies": {
+    "@mercurial-finance/stable-swap-n-pool": "^0.2.5",
+    "@project-serum/serum": "^0.13.64",
+    "@solana/spl-token": "^0.1.8",
+    "@solana/web3.js": "^1.39.1",
+    "bn.js": "^5.2.0"
+  }
+}
