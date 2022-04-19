@@ -74,7 +74,7 @@ async function calculateInterestRate() {
   const pSOLReserve = serumRsvs[1] + merRsvs[1];
   const leverageCoefficient = 2;
 
-  let interestRate = leverageCoefficient * (solReserve - pSOLReserve) / pSOLReserve;
+  let interestRate = leverageCoefficient * (pSOLReserve - solReserve) / solReserve;
   if (interestRate < 0) {
     if (debug) {
       console.log(interestRate, ' --> 0')
