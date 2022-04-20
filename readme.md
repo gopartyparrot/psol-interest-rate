@@ -8,5 +8,5 @@ pSOL interest rate calculator
 ```bash
 yarn
 
-DEBUG=y node index.js
+node index.js
 ```
