@@ -80,4 +80,4 @@ async function calculateInterestRate() {
   return { solReserve, pSOLReserve, interestRate };
 }
 
-calculateInterestRate().then((ret) => console.log(ret));
+exports.calculateInterestRate = calculateInterestRate

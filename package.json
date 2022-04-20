@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "",
+  "scripts": {
+    "x": "node cli.js"
+  },
   "dependencies": {
     "@mercurial-finance/stable-swap-n-pool": "^0.2.5",
     "@project-serum/serum": "^0.13.64",
