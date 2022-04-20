@@ -1,26 +1,23 @@
 const { calculateInterestRate } = require("./lib.js");
 const http = require("http");
 
-let cache = {
-  time: new Date(),
-  value: null,
-};
+let cache = {};
 
-const listener = async function (req, res) {
-  // cache 5m
-  if (
-    !cache.value ||
-    new Date().getTime() - cache.time.getTime() > 5 * 60 * 1000
-  ) {
-    console.log("fetch");
-    const data = await calculateInterestRate();
-    cache.value = data;
-    cache.time = new Date();
+async function update() {
+  try {
+    console.log(new Date(), "fetch");
+    cache = await calculateInterestRate();
+  } catch (e) {
+    console.log("ERR", e);
   }
+}
 
-  res.writeHead(200);
-  res.end(JSON.stringify(cache.value, "", "  "));
-};
+setInterval(update, 5 * 60 * 1000);
+update();
 
-const server = http.createServer(listener);
-server.listen(8080);
+http
+  .createServer(function (req, res) {
+    res.writeHead(200);
+    res.end(JSON.stringify(cache, "", "  "));
+  })
+  .listen(8080);
