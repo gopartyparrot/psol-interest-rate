@@ -18,14 +18,12 @@ async function serumReserves() {
   ); //v3
   let market = await serum.Market.load(conn, marketAddr, {}, program);
 
-  let bids = await market.loadBids(conn);
-  let asks = await market.loadAsks(conn);
-
-  // TODO maybe we should ignore order with price that offset too much from real price
+  let bids = await market.loadBids(conn); // buy pSOL
+  let asks = await market.loadAsks(conn); // sell pSOL
 
   let solReserve = 0;
   for (let { price, size, side } of bids) {
-    if (price <= 1.005) {
+    if (price >= 0.995) {
       solReserve += size;
     }
   }
@@ -80,4 +78,4 @@ async function calculateInterestRate() {
   return { solReserve, pSOLReserve, interestRate };
 }
 
-exports.calculateInterestRate = calculateInterestRate
+exports.calculateInterestRate = calculateInterestRate;

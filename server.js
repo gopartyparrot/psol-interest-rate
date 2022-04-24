@@ -5,7 +5,6 @@ let cache = {};
 
 async function update() {
   try {
-    console.log(new Date(), "fetch");
     const ret = await calculateInterestRate();
     cache = {
       date: new Date(),
