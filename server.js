@@ -1,14 +1,19 @@
-const { calculateInterestRate } = require("./lib.js");
+const { pSOLInterestRate, pBTCInterestRate } = require("./lib.js");
 const http = require("http");
 
 let cache = {};
 
 async function update() {
   try {
-    const ret = await calculateInterestRate();
+    // console.log('[debug] will update pSOL');
+    const pSOL = await pSOLInterestRate();
+    // console.log('[debug] will update pBTC');
+    const pBTC = await pBTCInterestRate();
     cache = {
-      date: new Date(),
-      data: ret
+      title: 'Parrot protocol interest rate tracker',
+      updatedAt: new Date(),
+      pSOL,
+      pBTC
     }
   } catch (e) {
     console.log("ERR", e);

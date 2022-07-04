@@ -1,3 +1,4 @@
-const {calculateInterestRate} = require('./lib.js')
+const { pSOLInterestRate, pBTCInterestRate } = require('./lib.js')
 
-calculateInterestRate().then((ret) => console.log(ret));
+pSOLInterestRate().then((ret) => console.log('pSOL interest rate', ret));
+pBTCInterestRate().then((ret) => console.log('pBTC interest rate', ret));
