@@ -20,9 +20,9 @@ async function serumMarketReserves(marketAddr) {
   let asks = await market.loadAsks(conn);
 
   let bidReserve = 0; //buy pSOL|pBTC
-  for (let { price, size, side } of bids) {
+  for (let { price, size, side } of bids) { //Note, price meaning here: how much SOL got for selling 1pSOL
     // console.log('[debug] bid price, size', price, size, price >= 0.995)
-    if (price >= 0.995) {
+    if (1 / price <= 1.005) { //nearly same as price >= 0.995,  1/0.995 ==> 1.005025
       bidReserve += size;
     }
   }
