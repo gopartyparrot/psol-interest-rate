@@ -99,7 +99,7 @@ async function pBTCInterestRate() {
   const renBTCReserve = serumRenBTCReserve + saberRenBTCReserve;
   const pBTCReserve = serumPBTCReserve + saberPBTCReserve;
   const leverageCoefficient = 7;
-  const interestRate = Math.max(leverageCoefficient * (pBTCReserve - renBTCReserve) / pBTCReserve, 0);
+  const interestRate = Math.max(leverageCoefficient * (pBTCReserve - renBTCReserve) / renBTCReserve, 0);
 
   return {
     name: 'pBTC interest rate',
@@ -107,7 +107,7 @@ async function pBTCInterestRate() {
     pBTCReserve,
     renBTCReserve,
     interestRate,
-    formula: 'Math.max(leverageCoefficient * (pBTCReserve - renBTCReserve) / pBTCReserve, 0)',
+    formula: 'Math.max(leverageCoefficient * (pBTCReserve - renBTCReserve) / renBTCReserve, 0)',
 
     serumReserves: {
       pBTC: serumPBTCReserve,
