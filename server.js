@@ -36,9 +36,9 @@ http
 
     const template = `
 <html>
-    <header>
+    <head>
       <title>Interest rate tracker</title>
-    </header>
+    </head>
     <body>
     <h1>Interest rate tracker</h1>
     <p>
