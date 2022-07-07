@@ -11,6 +11,8 @@ const serumProgramV3 = new web3.PublicKey('9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9
 const serumMarketSOLpSOL = new web3.PublicKey('2SSWeXgcXrCqEEf2A8kN16rRidGVXWdskP8ASdrcWTpC')
 const serumMarket_pBTCrenBTC = new web3.PublicKey('2ZXno5u6RiEAj4Gu9pW2kKxKwbVR4ApB2iDqpGc93qb3')
 const saberStableSwapPBTCrenBTC = new web3.PublicKey('AyiATPCAx5HZstcZ1jdH9rENwFb3yd9zEhkgspvDrCs4')
+const merPool_pSOLSOL = new web3.PublicKey("SoLw5ovBPNfodtAbxqEKHLGppyrdB4aZthdGwpfpQgi"); //pSOL2pool, mints: wSOL-pSOL
+const merPool_pai3pool = new web3.PublicKey("SWABtvDnJwWwAb9CbSA3nv7nTnrtYjrACAVtuP3gyBB")
 
 // return:[bidReserve, askReserve]
 async function serumMarketReserves(marketAddr) {
@@ -39,10 +41,7 @@ async function serumMarketReserves(marketAddr) {
 }
 
 // return: [SOLReserve, pSOLReserve]
-async function merSOLpSOLReserves() {
-  const pool = new web3.PublicKey(
-    "SoLw5ovBPNfodtAbxqEKHLGppyrdB4aZthdGwpfpQgi"
-  ); //pSOL2pool, mints: wSOL-pSOL
+async function merReserves(pool) {
   const sim = pool; // NOTE: this can be anything
   const spool = await mer.StableSwapNPool.load(conn, pool, sim);
 
@@ -66,7 +65,7 @@ async function saberStableSwapReserves(swapAddr) {
 
 async function pSOLInterestRate() {
   const [serumSOLReserve, serumPSOLReserve] = await serumMarketReserves(serumMarketSOLpSOL);
-  const [merSOLReserve, merPSOLReserve] = await merSOLpSOLReserves();
+  const [merSOLReserve, merPSOLReserve] = await merReserves(merPool_pSOLSOL);
 
   const solReserve = serumSOLReserve + merSOLReserve;
   const pSOLReserve = serumPSOLReserve + merPSOLReserve;
@@ -76,10 +75,10 @@ async function pSOLInterestRate() {
   return {
     name: 'pSOL interest rate',
     leverageCoefficient,
-    solReserve,
     pSOLReserve,
+    solReserve,
     interestRate,
-    formula: 'Math.max(leverageCoefficient * (pSOLReserve - solReserve) / solReserve, 0)',
+    // formula: 'leverageCoefficient * (pSOLReserve - solReserve) / solReserve',
 
     serumReserves: {
       sol: serumSOLReserve,
@@ -107,7 +106,7 @@ async function pBTCInterestRate() {
     pBTCReserve,
     renBTCReserve,
     interestRate,
-    formula: 'Math.max(leverageCoefficient * (pBTCReserve - renBTCReserve) / renBTCReserve, 0)',
+    // formula: 'leverageCoefficient * (pBTCReserve - renBTCReserve) / renBTCReserve',
 
     serumReserves: {
       pBTC: serumPBTCReserve,
@@ -118,8 +117,26 @@ async function pBTCInterestRate() {
       renBTC: saberRenBTCReserve
     }
   }
+}
 
+async function paiInterestRate() {
+  const [usdcReserve, usdtReserve, paiReserve] = await merReserves(merPool_pai3pool)
+  const usdReserve = usdcReserve + usdtReserve;
+
+  const leverageCoefficient = 3;
+  const interestRate = Math.max(leverageCoefficient * (paiReserve - usdReserve) / usdReserve, 0);
+
+  return {
+    name: 'PAI interest rate',
+    leverageCoefficient,
+    paiReserve,
+    usdReserve,
+    interestRate,
+    // formula: 'leverageCoefficient * (paiReserve - usdReserve) / usdReserve',
+    merReserves: { usdcReserve, usdtReserve, paiReserve }
+  }
 }
 
 exports.pSOLInterestRate = pSOLInterestRate;
 exports.pBTCInterestRate = pBTCInterestRate;
+exports.paiInterestRate = paiInterestRate;
